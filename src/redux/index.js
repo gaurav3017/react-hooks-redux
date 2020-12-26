@@ -1,10 +1,16 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './reducers'
 import { Provider } from 'react-redux'
 
-const store = createStore(rootReducer, composeWithDevTools());
+import createSagaMiddleware from 'redux-saga'
+import rootSaga from './sagas'
 
+const sagaMiddleware = createSagaMiddleware()
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)))
+
+sagaMiddleware.run(rootSaga)
 
 const DataProvider = ({children}) => 
     <Provider store={store}>
